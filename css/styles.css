@@ -229,6 +229,11 @@ header h1 {
 
     .header-text-container {
         text-align: left;
+        text-shadow: 1px 5px 4px;
+        transition: transform .5s;
+    }
+    .header-text-container:hover {
+        transform: scale(1.12);
     }
 
     .search-container {
@@ -249,7 +254,7 @@ header h1 {
 @media (min-width: 1024px) {
 
     .card:hover {
-        background: rgba(255, 255, 255, 1);
+        background: #b7d7e8;
         border: 1px solid rgba(50, 50, 50, 0.9);
     }
 
