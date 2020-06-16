@@ -1,7 +1,11 @@
 // console.log('hello script.js')
 
-const randomUserAPI = 'https://randomuser.me/api/?results=12';
+// URL AND GALLERY DIV
+const randomUserURL = 'https://randomuser.me/api/?results=12';
 const gallery = document.getElementById('gallery');
+
+
+// MODAL BOX SETTINGS
 const modalContainer = document.createElement('div');
 const modalDiv = document.createElement('div');
 const modalBtn = document.createElement('div');
@@ -11,18 +15,21 @@ modalBtn.innerHTML = `
     <button type="button" id="modal-next" class="modal-next btn">Next</button>
 `;
 
+// MODAL CARD PURPOSE. SAVE DATA FROM RANDOM USER API
 let allUsers = [];
 
+
+// SEARCH BOX SETTINGS
 const searchContainer = document.querySelector('.search-container');
 const form = document.createElement('form');
 form.setAttribute('action', "#");
 form.setAttribute('method', "get");
-const submit = `
+const inputs = `
     <input type="search" id="search-input" class="search-input" placeholder="Search...">
     <input type="submit" value="&#x1F50D;" id="search-submit" class="search-submit">
 `;
 searchContainer.appendChild(form);
-form.innerHTML = submit;
+form.innerHTML = inputs;
 
 
 async function fetching(url) {
@@ -35,13 +42,9 @@ async function fetching(url) {
     }
 }
 
-fetching(randomUserAPI)
-    .then(randomUserCards);
 
 function randomUserCards(users) {
-    // console.log(user)
     allUsers = users.map( user => {
-        console.log(user)
         const userInfo = `
             <div class="card">
                 <div class="card-img-container">
@@ -59,17 +62,18 @@ function randomUserCards(users) {
         return { ...user };
     })
 
-    showModal()
-
+    showModal();
+    searchUsers();
 }
 
+
 function randomUserModal(userIndex) {
-    const birthday = new Date(Date.parse(allUsers[userIndex].dob.date)).toLocaleDateString() 
+    const birthday = new Date(Date.parse(allUsers[userIndex].dob.date)).toLocaleDateString();
 
     modalContainer.className = "modal-container";
     modalDiv.className = "modal";
     modalContainer.appendChild(modalDiv);
-    modalContainer.appendChild(modalBtn)
+    modalContainer.appendChild(modalBtn);
     document.body.appendChild(modalContainer);
 
     const card = `
@@ -89,18 +93,63 @@ function randomUserModal(userIndex) {
     modalContainer.style.display = 'block';
 }
 
+
 function showModal() {
+    
     const cards = gallery.querySelectorAll('.card');
 
     cards.forEach( ( user, index ) => {
         user.addEventListener('click', ()=> {
-            console.log('clicked', index)
-            randomUserModal(index)
+            randomUserModal(index);
+            prevNextModal(index);
         })
-        // console.log('user', user)
     })
 }
 
-modalContainer.addEventListener('click', () => {
-    console.log('clicked')
+
+function prevNextModal(userIndex) {
+    
+    document.querySelector('.modal-btn-container').addEventListener('click', e => {
+        if(e.target.id === "modal-prev") {
+            if( userIndex > 0 ) {
+                userIndex--;
+                randomUserModal(userIndex);
+            }
+        } else if(e.target.id === "modal-next") {
+            if( userIndex < 11 ) {
+                userIndex++;
+                randomUserModal(userIndex);
+            }
+        }
+    })
+}
+
+
+function searchUsers() {
+    document.getElementById('search-input').addEventListener('input', e => {
+        const cards = gallery.querySelectorAll('.card');
+        const names = gallery.querySelectorAll('.card #name');
+        let inputValue = e.target.value.toLowerCase();
+
+        names.forEach( ( name, index ) => {
+            const nameValue = name.textContent.toLowerCase();
+
+            if(nameValue.includes(inputValue)) {
+                cards[index].style.display = 'inherit';
+            } else {
+                cards[index].style.display = 'none';
+            }
+
+        })
+
+    })
+}
+
+fetching(randomUserURL)
+    .then(randomUserCards);
+
+modalContainer.addEventListener('click', e => {
+    if(e.target.tagName === "STRONG" || e.target.className === "modal-container") {
+        modalContainer.style.display = "none";
+    }
 })
