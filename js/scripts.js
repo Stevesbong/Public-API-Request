@@ -1,5 +1,3 @@
-// console.log('hello script.js')
-
 // URL AND GALLERY DIV
 const randomUserURL = 'https://randomuser.me/api/?results=12';
 const gallery = document.getElementById('gallery');
@@ -18,7 +16,6 @@ modalBtn.innerHTML = `
 // MODAL CARD PURPOSE. SAVE DATA FROM RANDOM USER API
 let allUsers = [];
 
-
 // SEARCH BOX SETTINGS
 const searchContainer = document.querySelector('.search-container');
 const form = document.createElement('form');
@@ -32,6 +29,7 @@ searchContainer.appendChild(form);
 form.innerHTML = inputs;
 
 
+// FETCHING API USING ASYNC / AWAIT
 async function fetching(url) {
     try {
         const res = await fetch(url);
@@ -43,6 +41,7 @@ async function fetching(url) {
 }
 
 
+// USER LAYOUT FUNCTION
 function randomUserCards(users) {
     allUsers = users.map( user => {
         const userInfo = `
@@ -67,6 +66,7 @@ function randomUserCards(users) {
 }
 
 
+// MODAL LAYOUT FUNCTION
 function randomUserModal(userIndex) {
     const birthday = new Date(Date.parse(allUsers[userIndex].dob.date)).toLocaleDateString();
 
@@ -94,8 +94,9 @@ function randomUserModal(userIndex) {
 }
 
 
+// DISPLAY MODAL WHEN USER CLICKED CARD DIV
 function showModal() {
-    
+
     const cards = gallery.querySelectorAll('.card');
 
     cards.forEach( ( user, index ) => {
@@ -107,8 +108,11 @@ function showModal() {
 }
 
 
+// PREVIOUS AND NEXT BUTTON EVENT LISTNER
 function prevNextModal(userIndex) {
     
+    // IF CLICKED PREVIOUS BUTTON, SUBTRACT 1 TO INDEX
+    // IF CLICKED NEXT BUTTON, ADD 1 TO INDEX
     document.querySelector('.modal-btn-container').addEventListener('click', e => {
         if(e.target.id === "modal-prev") {
             if( userIndex > 0 ) {
@@ -125,15 +129,18 @@ function prevNextModal(userIndex) {
 }
 
 
+// SEARCH INPUT EVENT LISTNER. FILTERED BY USER NAME
 function searchUsers() {
     document.getElementById('search-input').addEventListener('input', e => {
         const cards = gallery.querySelectorAll('.card');
         const names = gallery.querySelectorAll('.card #name');
         let inputValue = e.target.value.toLowerCase();
 
+        // IF INPUT VALUES MATCHES NAME IN THE EACH CARD, THEN DISPLAY.
+        // OTHER CARD WILL DISAPPEAR
         names.forEach( ( name, index ) => {
-            const nameValue = name.textContent.toLowerCase();
 
+            const nameValue = name.textContent.toLowerCase();
             if(nameValue.includes(inputValue)) {
                 cards[index].style.display = 'inherit';
             } else {
@@ -145,9 +152,13 @@ function searchUsers() {
     })
 }
 
+
+// FETCHING RANDOM USER AND DISPLAY
 fetching(randomUserURL)
     .then(randomUserCards);
 
+
+// MODAL OVERLAY CLOSE EVENT LISTNER
 modalContainer.addEventListener('click', e => {
     if(e.target.tagName === "STRONG" || e.target.className === "modal-container") {
         modalContainer.style.display = "none";
