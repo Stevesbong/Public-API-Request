@@ -79,7 +79,7 @@ function randomUserModal(userIndex) {
     const card = `
         <button type="button" id="modal-close-btn" class="modal-close-btn"><strong>X</strong></button>
         <div class="modal-info-container">
-            <img class="modal-img" src="${allUsers[userIndex].picture.thumbnail}" alt="profile picture">
+            <img class="modal-img" src="${allUsers[userIndex].picture.large}" alt="profile picture">
             <h3 id="name" class="modal-name cap">${allUsers[userIndex].name.first} ${allUsers[userIndex].name.last}</h3>
             <p class="modal-text">${allUsers[userIndex].email}</p>
             <p class="modal-text cap">${allUsers[userIndex].location.city}</p>
